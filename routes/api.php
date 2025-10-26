@@ -3,6 +3,7 @@
 use App\Enums\UserRole;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PreOrderController;
 use App\Http\Controllers\RuleController;
 use App\Http\Controllers\SupplierController;
@@ -15,7 +16,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')->group(function () {    
+    Route::post('/save-fcm-token', [NotificationController::class, 'fcmToken']);
     Route::post('login-admin', [AuthController::class, 'loginAdmin']);
     Route::post('login-mobile', [AuthController::class, 'loginMobile']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
@@ -23,6 +25,7 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('profile', [AuthController::class, 'profile']);
+        Route::post('update-password', [AuthController::class, 'updatePassword']);
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
@@ -111,8 +114,9 @@ Route::middleware(['auth:sanctum', 'role:' . UserRole::GUDANG->value])->group(fu
     Route::get('/pre-orders', [PreOrderController::class, 'index']);
     Route::post('/pre-orders', [PreOrderController::class, 'store']);
     Route::get('/pre-orders/{id}', [PreOrderController::class, 'show']);
-    // Route::put('/pre-orders/{id}', [PreOrderController::class, 'update']);
+    Route::put('/pre-orders/{id}/status', [PreOrderController::class, 'updateStatus']);
     Route::delete('/pre-orders/{id}', [PreOrderController::class, 'destroy']);
+    Route::post('/pre-orders/set-done/{id}', [PreOrderController::class, 'setStatusDone']);
 });
 
 Route::middleware(['auth:sanctum', 'role:' . UserRole::CUSTOMER->value])->group(function () {

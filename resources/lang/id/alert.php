@@ -55,5 +55,8 @@ return [
 
     'driver_not_match' => 'Data driver tidak cocok',
 
-    'top_not_null' => 'Top harus diisi karena pembayaran belum lunas'
+    'top_not_null' => 'Top harus diisi karena pembayaran belum lunas',
+
+    'set_status_done' => 'Status berhasil berubah menjadi selesai',
+    'set_status_failed' => 'Gagal merubah status, coba lagi nanti'
 ];

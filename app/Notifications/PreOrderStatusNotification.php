@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Services\FirebaseService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,7 +12,7 @@ class PreOrderStatusNotification extends Notification
 {
     use Queueable;
 
-    protected $po;
+    protected $preOrder;
     protected $status;
     /**
      * Create a new notification instance.
@@ -29,7 +30,7 @@ class PreOrderStatusNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'fcm'];
     }
 
     /**
@@ -38,25 +39,43 @@ class PreOrderStatusNotification extends Notification
     public function toDatabase($notifiable)
     {
         $name = $this->preOrder->supplier->name ?? 'Supplier';
-        $title = '';
-        $message = '';
 
-        switch($this->status){
-            case 'process':
-                $title = 'Menunggu Persetujuan';
-                $message = "Pre-Order dari {$name} sedang menunggu persetujuan";
-                break;
+    $title = 'Status Pre Order';
+    $body = match($this->status) {
+        'process' => "Pre-Order dari {$name} menunggu persetujuan.",
+        'approved' => "Pre-Order dari {$name} disetujui.",
+        'rejected' => "Pre-Order dari {$name} ditolak.",
+        default => "Pre-Order diperbarui.",
+    };
 
-            case 'approved':
-                $title = 'Pre Order Disetujui';
-                $message = "Pre Order dari {$name} telah disetujui.";
-                break;
-        }
+    if (!empty($notifiable->fcm_token)) {
+        FirebaseService::sendNotification(
+            $notifiable->fcm_token,
+            $title,
+            $body,
+            ['pre_order_id' => $this->preOrder->id, 'status' => $this->status]
+        );
+    }
+
+    return [
+        'pre_order_id' => $this->preOrder->id,
+        'title' => $title,
+        'message' => $body,
+        'status' => $this->status,
+    ];
+    }
+    public function toFcm($notifiable)
+    {
+        $name = $this->preOrder->supplier->name ?? 'Supplier';
+        $message = match($this->status){
+            'process' => "Pre-Order dari {$name} menunggu persetujuan.",
+            'done' => "Pre-Order dari {$name} disetujui"
+        };
         return [
-            'pre_order_id' => $this->preOrder->id,
-            'title' => $title,
+            'title' => 'Status Pre-Order',
             'message' => $message,
             'status' => $this->status,
+            'pre_order_id' => $this->preOrder->id,
         ];
     }
 

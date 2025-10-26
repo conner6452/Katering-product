@@ -9,17 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-        public function up(): void
-        {
-            Schema::create('suppliers', function (Blueprint $table) {
-                $table->uuid('id')->primary();
-                $table->string('name');
-                $table->string('contact');
-                $table->text('company_detail');
-                $table->softDeletes();
-                $table->timestamps();
-            });
-        }
+    public function up(): void
+    {
+        Schema::create('suppliers', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('contact');
+            $table->text('company_detail');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

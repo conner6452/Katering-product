@@ -138,6 +138,18 @@ class PreOrderController extends Controller
         }
     }
 
+    public function setStatusDone(string $id): JsonResponse
+    {
+        try {
+            $this->preOrderHandler->setStatusDone($id);
+            return ResponseHelper::success(null, __('alert.set_status_done'));
+        } catch (ModelNotFoundException $e) {
+            return ResponseHelper::error(__('alert.set_status_failed'), 404);
+        } catch (Throwable $e) {
+            return ResponseHelper::error(__('alert.set_status_failed'), $e->getMessage(), 400);
+        }
+    }
+
     public function trash(Request $request): JsonResponse
     {
         try {

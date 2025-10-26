@@ -106,6 +106,41 @@ class AuthHandler
         }
     }
 
+    public function updatePassword(array $data)
+    {
+        $user = auth()->user();
+
+        // Cek password lama
+        if (!Hash::check($data['current_password'], $user->password)) {
+            throw new \Exception('Password lama salah.');
+        }
+
+        // Cek password baru dan konfirmasi sama
+        if ($data['new_password'] !== $data['new_password_confirmation']) {
+            throw new \Exception('Konfirmasi password baru tidak sama.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $user->password = Hash::make($data['new_password']);
+            $user->save();
+
+            $this->activityLogInterface->log([
+                'id' => Str::uuid(),
+                'user_id' => $user->id,
+                'target_id' => $user->id,
+                'action' => 'update_password',
+                'description' => 'User mengganti password melalui fitur update password.',
+            ]);
+
+            DB::commit();
+            return true;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw new \Exception('Terjadi kesalahan, silakan coba lagi');
+        }
+    }
+
     public function storeCustomer(array $data)
     {
         if (isset($data['image']) && $data['image']) {

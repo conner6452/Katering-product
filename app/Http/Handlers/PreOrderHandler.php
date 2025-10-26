@@ -5,6 +5,8 @@ namespace App\Http\Handlers;
 use App\Contracts\Interface\PreOrderInterface;
 use App\Models\Ingredient;
 use App\Models\PreOrder;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class PreOrderHandler
 {
@@ -48,5 +50,27 @@ class PreOrderHandler
             ];
             return $this->preOrderInterface->store($payload);
         }
+    }
+
+    public function setStatusDone(string $preOrderId)
+    {
+        $preOrder = $this->preOrderInterface->findById($preOrderId);
+
+        if ($preOrder->status === 'done') {
+            throw new Exception('Pre order sudah selesai.');
+        }
+
+        // Update stok ingredient dan status pre order dalam transaksi
+        DB::transaction(function () use ($preOrder) {
+            foreach ($preOrder->preOrderLists as $item) {
+                $ingredient = $item->ingredient;
+                if ($ingredient) {
+                    $ingredient->increment('stock', $item->quantity);
+                }
+            }
+            $preOrder->update(['status' => 'done']);
+        });
+
+        return $preOrder->fresh(['supplier', 'preOrderLists.ingredient']);
     }
 }

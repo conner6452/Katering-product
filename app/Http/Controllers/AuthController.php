@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\StoreUserRequest;
 use App\Http\Requests\Auth\UpdateForgotPasswordRequest;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 use App\Http\Requests\Auth\UpdateUserRequest;
 use App\Http\Resources\UserCreateResource;
 use App\Http\Resources\UserResource;
@@ -103,6 +104,24 @@ class AuthController extends Controller
     {
         try {
             $user = $this->authHandler->updateForgotPassword($request->validated());
+            return ResponseHelper::success(
+                $user,
+                __('auth.update_password_success')
+            );
+        } catch (\Throwable $th) {
+            return ResponseHelper::error(
+                __('auth.update_password_error'),
+                $th->getMessage(),
+                400
+            );
+        }
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $user = $this->authHandler->updatePassword($data);
             return ResponseHelper::success(
                 $user,
                 __('auth.update_password_success')

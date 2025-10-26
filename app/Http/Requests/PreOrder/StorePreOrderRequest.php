@@ -31,7 +31,15 @@ class StorePreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-
+            'supplier_id.required' => 'Supplier wajib diisi.',
+            'supplier_id.uuid' => 'Format supplier tidak valid.',
+            'supplier_id.exists' => 'Supplier tidak ditemukan.',
+            'ingredient_id.required' => 'Bahan wajib diisi.',
+            'ingredient_id.uuid' => 'Format bahan tidak valid.',
+            'ingredient_id.exists' => 'Bahan tidak ditemukan.',
+            'quantity.required' => 'Jumlah bahan wajib diisi.',
+            'quantity.integer' => 'Jumlah bahan harus berupa angka.',
+            'quantity.min' => 'Jumlah bahan minimal 1.',
         ];
     }
 }

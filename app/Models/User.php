@@ -31,6 +31,7 @@ class User extends Authenticatable
         'plainPassword',
         'phone_number',
         'image',
+        'fcm_token'
     ];
 
     /**

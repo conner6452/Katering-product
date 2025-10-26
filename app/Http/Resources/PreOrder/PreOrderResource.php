@@ -25,6 +25,7 @@ class PreOrderResource extends JsonResource
                     'id' => $item->id,
                     'ingredient_id' => $item->ingredient_id,
                     'ingredient_name' => $item->ingredient?->name,
+                    'ingredient_price' => $item->ingredient?->price,
                     'quantity' => $item->quantity,
                     'total_price' => $item->total_price,
                 ];
